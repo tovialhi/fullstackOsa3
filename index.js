@@ -86,16 +86,18 @@ app.post('/api/persons', (req, res) => {
         if (result) {
             res.status(400).send({error: 'name must be unique'})
         }
+        else {
+            const person = new Person({
+                name: body.name,
+                number: body.number
+            })
+        
+            person.save().then(savedPerson => {
+                res.json(savedPerson)
+            })
+        }
     })
 
-    const person = new Person({
-        name: body.name,
-        number: body.number
-    })
-
-    person.save().then(savedPerson => {
-        res.json(savedPerson)
-    })
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {

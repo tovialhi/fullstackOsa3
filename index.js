@@ -21,18 +21,17 @@ const unknownEndpoint = (req, res) => {
     res.status(404).send({error: 'unknown endpoint'})
 }
 
-app.use(unknownEndpoint)
 
 const errorHandler = (error, req, res, next) => {
     console.error(error.message)
-
+    
     if (error.name === 'CastError') {
         return res.status(400).send({error: 'malformatted id'})
     }
     next(error)
 }
 
-app.use(errorHandler)
+
 
 
 let persons = [
@@ -108,6 +107,9 @@ app.get('/api/info', (req, res) => {
     res.send(`<p>Phonebook has info for ${Person.find({}).lenght} people</p>${new Date()}<p></p>`)
     })
 
+
+app.use(unknownEndpoint)
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {

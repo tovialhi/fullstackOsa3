@@ -16,29 +16,6 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :c
 
 morgan.token('content', function (req, res) {if (req.method === 'POST') return JSON.stringify(req.body) })
 
-app.post('/api/persons', (req, res) => {
-    const body = req.body
-
-    if (!body.name || !body.number) {
-        return res.status(400).json({ 
-          error: 'content missing' 
-        })
-    }
-
-    if (Person.find({name: body.name})) {
-        return res.status(400).json({error: 'name must be unique'})
-    }
-
-    const person = new Person({
-        name: body.name,
-        number: body.number
-    })
-
-    person.save().then(savedPerson => {
-        res.json(savedPerson)
-    })
-})
-
 
 const unknownEndpoint = (req, res) => {
     res.status(404).send({error: 'unknown endpoint'})
@@ -95,6 +72,29 @@ app.get('/api/persons/:id', (req, res, next) => {
             res.status(404).end()
         }
     }).catch (error => next(error))
+})
+
+app.post('/api/persons', (req, res) => {
+    const body = req.body
+
+    if (!body.name || !body.number) {
+        return res.status(400).json({ 
+          error: 'content missing' 
+        })
+    }
+
+    if (Person.find({name: body.name})) {
+        return res.status(400).json({error: 'name must be unique'})
+    }
+
+    const person = new Person({
+        name: body.name,
+        number: body.number
+    })
+
+    person.save().then(savedPerson => {
+        res.json(savedPerson)
+    })
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {

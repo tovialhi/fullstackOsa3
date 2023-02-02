@@ -63,12 +63,15 @@ app.get('/api/persons', (req, res) => {
 app.get('/api/persons/:id', (req, res, next) => {
     Person.findById(req.params.id).then(person => {
         if (person) {
-            res.json(
-                {
-                    name: person.name,
-                    number: person.number,
-                    id: person.id
-                })
+            const personString = `<div>
+            <p>{</p>
+                <p>     name: "${person.name}"</p>
+                <p>     number: "${person.number}"</p>
+                <p>     id: "${person.id}"</p>
+            <p>}</p>
+            </div>`
+
+            res.json(person)
         } else {
             res.status(404).end()
         }
@@ -120,7 +123,7 @@ app.put('/api/persons/:id', (req, res, next) => {
 
 
 app.get('/api/info', (req, res) => {
-    res.send(`<p>Phonebook has info for ${Person.find({}).length} people</p>${new Date()}<p></p>`)
+    res.send(`<p>Phonebook has info for ${Person.count({})} people</p>${new Date()}<p></p>`)
     })
 
 

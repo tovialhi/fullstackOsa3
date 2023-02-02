@@ -80,7 +80,7 @@ app.post('/api/persons', (req, res) => {
     }
 
     Person.find({name: body.name}).then(result => {
-        if (result === null) {
+        if (!result) {
             console.log('result:', result)
             res.status(400).json({error: 'name must be unique'})
         }
@@ -100,7 +100,7 @@ app.post('/api/persons', (req, res) => {
 
 app.delete('/api/persons/:id', (req, res, next) => {
     Person.findByIdAndRemove(req.params.id).then(result => {
-        response.status(204).end()
+        res.status(204).end()
     }).catch(error => next(error))
 })
 

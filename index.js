@@ -108,6 +108,8 @@ app.put('/api/persons/:id', (req, res, next) => {
     const reqId = req.params.id
     const body = req.body
 
+    console.log('req:', req, 'body:', body)
+
     Person.updateOne({id: reqId}, 
         {name: body.name, number: body.number})
         .then(res.send(`Person ${body.name} updated succesfully`))

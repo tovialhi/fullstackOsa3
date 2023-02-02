@@ -11,13 +11,6 @@ const Person = require('./models/person')
 
 morgan.token('content', function (req, res) {if (req.method === 'POST') return JSON.stringify(req.body) })
 
-const requestLogger = (request, response, next) => {
-    console.log('Method:', request.method)
-    console.log('Path:  ', request.path)
-    console.log('Body:  ', request.body)
-    console.log('---')
-    next()
-}
 
 const errorHandler = (error, req, res, next) => {
     console.error(error.message)
@@ -33,10 +26,8 @@ const unknownEndpoint = (req, res) => {
 }
 
 
-
 app.use(cors())
 app.use(express.json())
-app.use(requestLogger)
 app.use(express.static('build'))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :content', 'skip'))
 
@@ -89,7 +80,7 @@ app.post('/api/persons', (req, res) => {
     }
 
     Person.find({name: body.name}).then(result => {
-        if (result) {
+        if (result === null) {
             console.log('result:', result)
             res.status(400).json({error: 'name must be unique'})
         }

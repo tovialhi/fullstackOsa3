@@ -84,7 +84,7 @@ app.post('/api/persons', (req, res) => {
             console.log('result:', result)
             res.status(400).json({error: 'name must be unique'})
         }
-        else {
+        else { 
             const person = new Person({
                 name: body.name,
                 number: body.number
@@ -102,6 +102,15 @@ app.delete('/api/persons/:id', (req, res, next) => {
     Person.findByIdAndRemove(req.params.id).then(result => {
         res.status(204).end()
     }).catch(error => next(error))
+})
+
+app.put('/api/persons', (req, res, next) => {
+    const body = req.body
+
+    Person.updateOne({name: body.name}, 
+        {name: body.name, number: body.number})
+        .then(res.send(`Person ${body.name} updated succesfully`))
+        .catch(error => next(error))
 })
 
 

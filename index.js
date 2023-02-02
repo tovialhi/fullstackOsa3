@@ -104,10 +104,11 @@ app.delete('/api/persons/:id', (req, res, next) => {
     }).catch(error => next(error))
 })
 
-app.put('/api/persons', (req, res, next) => {
+app.put('/api/persons/:id', (req, res, next) => {
+    const reqId = req.params.id
     const body = req.body
 
-    Person.updateOne({name: body.name}, 
+    Person.updateOne({id: reqId}, 
         {name: body.name, number: body.number})
         .then(res.send(`Person ${body.name} updated succesfully`))
         .catch(error => next(error))

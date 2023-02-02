@@ -112,7 +112,9 @@ app.put('/api/persons/:id', (req, res, next) => {
     
     const person = Person.findOne({id: reqId})
 
-    Person.updateOne({id: reqId}, {name: body.name, number: body.number})
+    Person.updateOne({id: reqId}, {number: body.number})
+
+    person.number = body.number
 
     person.save().then(updatedPerson => {
         res.json(updatedPerson)

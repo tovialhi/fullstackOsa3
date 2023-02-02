@@ -71,7 +71,7 @@ app.get('/api/persons/:id', (req, res, next) => {
             <p>}</p>
             </div>`
 
-            res.json(person)
+            res.send(personString)
         } else {
             res.status(404).end()
         }

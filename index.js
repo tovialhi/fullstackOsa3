@@ -108,17 +108,12 @@ app.put('/api/persons/:id', (req, res, next) => {
     const reqId = req.params.id
     const body = req.body
 
-    console.log('body:', body)
-    
-    const person = Person.findOne({id: reqId})
+    console.log('name:', body.name, 'number:', body.number)
 
-    Person.updateOne({id: reqId}, {number: body.number})
-
-    person.number = body.number
-
-    person.save().then(updatedPerson => {
+    Person.findByIdAndUpdate({id: reqId}, {number: body.number}).then(result => {
         res.json(updatedPerson)
     }).catch(error => next(error))
+    
 })
 
 

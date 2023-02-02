@@ -63,7 +63,7 @@ app.get('/api/persons', (req, res) => {
 app.get('/api/persons/:id', (req, res, next) => {
     Person.findById(req.params.id).then(person => {
         if (person) {
-            res.json(person)
+            JSON.stringify(person)
         } else {
             res.status(404).end()
         }
@@ -115,7 +115,7 @@ app.put('/api/persons/:id', (req, res, next) => {
 
 
 app.get('/api/info', (req, res) => {
-    res.send(`<p>Phonebook has info for ${Person.find({}).lenght} people</p>${new Date()}<p></p>`)
+    res.send(`<p>Phonebook has info for ${Person.find({}).length} people</p>${new Date()}<p></p>`)
     })
 
 

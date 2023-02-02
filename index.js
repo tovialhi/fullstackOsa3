@@ -1,26 +1,23 @@
 
 
-require('dotenv').config()
 const express = require('express')
+const app = express()
 const morgan = require('morgan')
 const cors = require('cors')
+require('dotenv').config()
+
 const Person = require('./models/person')
-const { response } = require('express')
 
-
-const app = express()
-app.use(express.static('build'))
-app.use(express.json())
-app.use(cors())
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :content', 'skip'))
 
 morgan.token('content', function (req, res) {if (req.method === 'POST') return JSON.stringify(req.body) })
 
-
-const unknownEndpoint = (req, res) => {
-    res.status(404).send({error: 'unknown endpoint'})
+const requestLogger = (request, response, next) => {
+    console.log('Method:', request.method)
+    console.log('Path:  ', request.path)
+    console.log('Body:  ', request.body)
+    console.log('---')
+    next()
 }
-
 
 const errorHandler = (error, req, res, next) => {
     console.error(error.message)
@@ -31,8 +28,17 @@ const errorHandler = (error, req, res, next) => {
     next(error)
 }
 
+const unknownEndpoint = (req, res) => {
+    res.status(404).send({error: 'unknown endpoint'})
+}
 
 
+
+app.use(cors())
+app.use(express.json())
+app.use(requestLogger)
+app.use(express.static('build'))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :content', 'skip'))
 
 let persons = [
 {
@@ -76,7 +82,7 @@ app.get('/api/persons/:id', (req, res, next) => {
 app.post('/api/persons', (req, res) => {
     const body = req.body
 
-    if (!body.name || !body.number) {
+    if (body.name === undefined || body.number === undefined) {
         return res.status(400).json({ 
           error: 'content missing' 
         })
@@ -84,6 +90,7 @@ app.post('/api/persons', (req, res) => {
 
     Person.find({name: body.name}).then(result => {
         if (result) {
+            console.log(result)
             res.status(400).json({error: 'name must be unique'})
         }
         else {

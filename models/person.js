@@ -18,12 +18,20 @@ mongoose.connect(url)
     name: {
       type: String,
       minlength: 3,
-      required: true
+      required: [true, 'Name required']
     },
 
     number: {
       type: String,
-      required: true
+      minlength: 8,
+
+      validate: {
+        validator: (v) => {
+          return /\d{3}-\d{5}/.test(v)
+        },
+        message: props => `${props.value} is not a valid phone number!`
+      },
+      required: [true, 'Number required']
     }
 })
 

@@ -28,14 +28,14 @@ const person = new Person({
 })
 
 if (nameArg && numberArg) {
-    person.save().then(result => {
+    person.save().then(() => {
         console.log(`added ${person.name} number ${person.number} to phonebook`)
         mongoose.connection.close()
       })
 }
 
 if (process.argv.length<4) {
-    Person.find({}).then(result => {
+    Person.find( {} ).then(result => {
         console.log('phonebook:')
         result.forEach(per => {
             console.log(`${per.name} ${per.number}`)
